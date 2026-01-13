@@ -1,0 +1,16 @@
+---
+
+- name: Remove VLANs - Environment
+  bigip_vlan:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ selfip_vlan }}"
+    - "{{ selfip_vlan2 }}"
+
+- name: Create VLANs - Environment
+  bigip_vlan:
+    name: "{{ item }}"
+  loop:
+    - "{{ selfip_vlan }}"
+    - "{{ selfip_vlan2 }}"

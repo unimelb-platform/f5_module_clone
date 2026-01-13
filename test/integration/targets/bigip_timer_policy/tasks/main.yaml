@@ -1,0 +1,386 @@
+---
+
+- import_tasks: setup.yaml
+
+- name: Create a timer policy
+  bigip_timer_policy:
+    name: timer1
+    description: my description
+  register: result
+
+- name: Assert Create a timer policy
+  assert:
+    that:
+      - result is changed
+
+- name: Create a timer policy - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    description: my description
+  register: result
+
+- name: Assert Create a timer policy - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change the description
+  bigip_timer_policy:
+    name: timer1
+    description: another description
+  register: result
+
+- name: Assert Change the description
+  assert:
+    that:
+      - result is changed
+
+- name: Change the description - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    description: another description
+  register: result
+
+- name: Assert Change the description - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change the rules
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+  register: result
+
+- name: Assert Change the rules
+  assert:
+    that:
+      - result is changed
+
+- name: Change the rules - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+  register: result
+
+- name: Assert Change the rules - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change the rules, add rule
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+      - name: rule2
+        protocol: udp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+  register: result
+
+- name: Assert Change the rules, add rule
+  assert:
+    that:
+      - result is changed
+
+- name: Change the rules, add rule - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+      - name: rule2
+        protocol: udp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+  register: result
+
+- name: Assert Change the rules, add rule - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change the rules, remove rule
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+  register: result
+
+- name: Assert Change the rules, remove rule
+  assert:
+    that:
+      - result is changed
+
+- name: Change the rules, remove rule - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+  register: result
+
+- name: Assert Change the rules, remove rule - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change the rules, add ports
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+          - 8080
+  register: result
+
+- name: Assert Change the rules, add ports
+  assert:
+    that:
+      - result is changed
+
+- name: Change the rules, add ports - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+          - 8080
+  register: result
+
+- name: Assert Change the rules, add ports - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Change the rules, ports not supported on protocol - Expected failure
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: 200
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+          - 8080
+  register: result
+  failed_when: result is success
+
+- name: Assert Change the rules, ports not supported on protocol - Expected failure
+  assert:
+    that:
+      - result is success
+
+- name: Set port range, correct
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        destination_ports:
+          - 80-443
+  register: result
+
+- name: Assert Set port range, correct
+  assert:
+    that:
+      - result is changed
+
+- name: Set port range, correct - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        destination_ports:
+          - 80-443
+  register: result
+
+- name: Assert Set port range, correct - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set port range, backwards
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        destination_ports:
+          - 8000-1000
+  register: result
+
+- name: Assert Set port range, backwards
+  assert:
+    that:
+      - result is changed
+
+- name: Set port range, backwards - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        destination_ports:
+          - 8000-1000
+  register: result
+
+- name: Assert Set port range, backwards - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set port range, all-other
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        destination_ports:
+          - all-other
+  register: result
+
+- name: Assert Set port range, all-other
+  assert:
+    that:
+      - result is changed
+
+- name: Set port range, all-other - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    rules:
+      - name: rule1
+        protocol: tcp
+        destination_ports:
+          - all-other
+  register: result
+
+- name: Assert Set port range, all-other - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Remove the timer policy
+  bigip_timer_policy:
+    name: timer1
+    state: absent
+  register: result
+
+- name: Assert Remove the timer policy
+  assert:
+    that:
+      - result is changed
+
+- name: Remove the timer policy - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    state: absent
+  register: result
+
+- name: Assert Remove the timer policy - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Create timer policy with rules
+  bigip_timer_policy:
+    name: timer1
+    description: my description
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+      - name: rule2
+        protocol: udp
+      - name: rule3
+        protocol: sctp
+        idle_timeout: 200
+        destination_ports:
+          - 21
+  register: result
+
+- name: Assert Create timer policy with rules
+  assert:
+    that:
+      - result is changed
+
+- name: Create timer policy with rules - Idempotent check
+  bigip_timer_policy:
+    name: timer1
+    description: my description
+    rules:
+      - name: rule1
+        protocol: tcp
+        idle_timeout: indefinite
+        destination_ports:
+          - 443
+          - 80
+      - name: rule2
+        protocol: udp
+      - name: rule3
+        protocol: sctp
+        idle_timeout: 200
+        destination_ports:
+          - 21
+  register: result
+
+- name: Assert Create timer policy with rules - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Remove timer policy with rules
+  bigip_timer_policy:
+    name: timer1
+    state: absent
+
+- import_tasks: teardown.yaml
+

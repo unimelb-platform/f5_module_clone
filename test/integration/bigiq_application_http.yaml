@@ -1,0 +1,69 @@
+---
+
+# Test the bigiq_application_http module
+#
+# Running this playbook assumes that you have a BIG-IP installation at the
+# ready to receive the commands issued in this Playbook.
+#
+# This module will run tests against a BIG-IP host to verify that the
+# bigiq_application_http module behaves as expected.
+#
+# Usage:
+#
+#    ansible-playbook -i notahost, test/integration/bigiq_application_http.yaml
+#
+# Examples:
+#
+#    Run all tests on the bigiq_application_http module
+#
+#    ansible-playbook -i notahost, test/integration/bigiq_application_http.yaml
+#
+
+- name: Metadata of bigiq_application_http
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    __metadata__:
+      upstream: yes
+      version: 1.2
+      tested_versions:
+        - NA
+      tested_platforms:
+        - NA
+
+- name: Test the bigiq_application_http module - Environment
+  hosts: "f5bigiq"
+  connection: local
+  any_errors_fatal: true
+
+  environment:
+    F5_SERVER: "{{ ansible_host }}"
+    F5_USER: "{{ bigiq_username }}"
+    F5_PASSWORD: "{{ bigiq_password }}"
+    F5_SERVER_PORT: "{{ bigiq_port }}"
+    F5_VALIDATE_CERTS: "{{ validate_certs }}"
+    F5_TEEM: "{{ no_f5_teem }}"
+
+  tasks:
+    - name: Include role - Environment
+      import_role:
+        name: bigiq_application_http
+        tasks_from: environment.yaml
+      tags:
+        - environment
+
+- name: Test the bigiq_application_http module - Provider-rest
+  hosts: "f5bigiq"
+  connection: local
+  any_errors_fatal: true
+
+  tasks:
+    - name: Include role - Provider-rest
+      import_role:
+        name: bigiq_application_http
+        tasks_from: provider-rest.yaml
+      tags:
+        - provider
+        - provider-rest

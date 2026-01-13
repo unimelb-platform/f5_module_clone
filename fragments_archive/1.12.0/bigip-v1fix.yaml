@@ -1,0 +1,5 @@
+---
+bugfixes:
+  - Add fix to iapp service update module
+minor_changes:
+  - Add reverse flag support to bigip_monitor_https

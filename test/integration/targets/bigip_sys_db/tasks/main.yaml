@@ -1,0 +1,76 @@
+---
+
+- name: Set failover.linksup variable "off"
+  bigip_sys_db:
+    key: "{{ bigip_sys_db_key_1 }}"
+    value: "{{ bigip_sys_db_val_1 }}"
+  register: result
+
+- name: Assert Set failover.linksup variable
+  assert:
+    that:
+      - result is changed
+
+- name: Set failover.linksup variable "off" - Idempotent check
+  bigip_sys_db:
+    key: "{{ bigip_sys_db_key_1 }}"
+    value: "{{ bigip_sys_db_val_1 }}"
+  register: result
+
+- name: Assert Set failover.linksup variable "off" - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set failover.linksup variable "on"
+  bigip_sys_db:
+    key: "{{ bigip_sys_db_key_1 }}"
+    value: "{{ bigip_sys_db_val_2 }}"
+  register: result
+
+- name: Assert Set failover.linksup variable "on"
+  assert:
+    that:
+      - result is changed
+
+- name: Set failover.linksup variable "on" - Idempotent check
+  bigip_sys_db:
+    key: "{{ bigip_sys_db_key_1 }}"
+    value: "{{ bigip_sys_db_val_2 }}"
+  register: result
+
+- name: Assert Set failover.linksup variable "on" - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Reset failover.linksup variable
+  bigip_sys_db:
+    key: "{{ bigip_sys_db_key_1 }}"
+    state: reset
+  register: result
+
+- name: Assert Reset failover.linksup variable
+  assert:
+    that:
+      - result is changed
+
+- name: Reset failover.linksup variable - Idempotent check
+  bigip_sys_db:
+    key: "{{ bigip_sys_db_key_1 }}"
+    state: reset
+  register: result
+
+- name: Assert Reset failover.linksup variable - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: No value and no reset
+  bigip_sys_db:
+    key: "{{ bigip_sys_db_key_1 }}"
+    state: present
+  register: result
+  failed_when: result is success
+
+- import_tasks: teardown.yaml

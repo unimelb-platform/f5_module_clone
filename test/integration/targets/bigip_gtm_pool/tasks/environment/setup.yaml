@@ -1,0 +1,8 @@
+---
+- name: Provision GTM on the device
+  bigip_provision:
+    module: gtm
+    state: present
+  tags:
+    - module-provisioning
+    - provision-module

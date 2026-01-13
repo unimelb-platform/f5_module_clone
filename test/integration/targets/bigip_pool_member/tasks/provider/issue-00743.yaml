@@ -1,0 +1,135 @@
+---
+
+- name: Issue 00743 - Add some pools - Provider
+  bigip_pool:
+    pool: "{{ item }}"
+    provider: "{{ provider }}"
+  loop:
+    - abc_log
+
+- name: Issue 00743 - Create pool member - Provider
+  bigip_pool_member:
+    provider: "{{ provider }}"
+    pool: abc_log
+    state: present
+    host: 10.0.0.100
+    port: 50002
+    partition: Common
+  register: result
+
+- name: Issue 00743 - Assert Create pool member - Provider
+  assert:
+    that:
+      - result is changed
+      - result is success
+
+- name: Issue 00743 - Create pool member - Idempotent check - Provider
+  bigip_pool_member:
+    provider: "{{ provider }}"
+    pool: abc_log
+    state: present
+    host: 10.0.0.100
+    port: 50002
+    partition: Common
+  register: result
+
+- name: Issue 00743 - Assert Create pool member - Idempotent check - Provider
+  assert:
+    that:
+      - result is not changed
+      - result is success
+
+- name: Issue 00743 - Set fact for testing
+  set_fact:
+    pools:
+      - name: f
+        monitor_type: single
+        monitors:
+          - HIPPO_Health
+        members:
+          - host: 3.3.3.3
+            port: 80
+          - host: 4.4.4.4
+            port: 8080
+          - host: 5.5.5.5
+            port: 443
+      - name: g
+        members:
+          - host: 6.6.6.6
+            port: 80
+          - host: 7.7.7.7
+            port: 8080
+          - host: 8.8.8.8
+            port: 443
+    monitor_http:
+      - name: HIPPO_Health
+        interval: 10
+        timeout: 31
+        receive: UP
+        send: GET /rest/server/ping\\r\\n
+
+- name: Issue 00743 - Create HTTP monitors
+  bigip_monitor_http:
+    provider: "{{ provider }}"
+    name: "{{ item.name }}"
+    state: "{{ item.state | default(omit) }}"
+    interval: "{{ item.interval }}"
+    timeout: "{{ item.timeout }}"
+    receive: "{{ item.receive }}"
+    receive_disable: "{{ item.receive_disable | default(omit) }}"
+    send: "{{ item.send }}"
+  loop: "{{ monitor_http }}"
+
+- name: Issue 00743 - Create Pool
+  bigip_pool:
+    provider: "{{ provider }}"
+    name: "{{ item.name }}"
+    state: "{{ item.state | default(omit) }}"
+    lb_method: "{{ item.lb_method | default(omit)}}"
+    monitor_type: "{{ item.monitor_type | default(omit) }}"
+    monitors: "{{ item.monitors | default(omit) }}"
+    service_down_action: "{{ item.service_down_action | default(omit) }}"
+  loop: "{{ pools }}"
+
+- name: Issue 00743 - Create Pool members with_subelements
+  bigip_pool_member:
+    provider: "{{ provider }}"
+    pool: "{{ item.0.name }}"
+    state: "{{ item.1.state | default(omit) }}"
+    host: "{{ item.1.host }}"
+    port: "{{ item.1.port }}"
+    partition: "{{ item.1.partition | default(omit) }}"
+  with_subelements:
+    - "{{ pools }}"
+    - members
+
+- name: Issue 00743 - Remove pools - Provider
+  bigip_pool:
+    pool: "{{ item }}"
+    state: absent
+    provider: "{{ provider }}"
+  loop:
+    - abc_log
+    - f
+    - g
+
+- name: Issue 00743 - Remove HTTP monitors
+  bigip_monitor_http:
+    provider: "{{ provider }}"
+    name: "{{ item.name }}"
+    state: absent
+  loop: "{{ monitor_http }}"
+
+- name: Issue 00743 - Remove Nodes
+  bigip_node:
+    name: "{{ item }}"
+    provider: "{{ provider }}"
+    state: absent
+  loop:
+    - 3.3.3.3
+    - 4.4.4.4
+    - 5.5.5.5
+    - 6.6.6.6
+    - 7.7.7.7
+    - 8.8.8.8
+    - 10.0.0.100

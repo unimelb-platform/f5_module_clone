@@ -1,0 +1,14 @@
+---
+
+- name: Provision GTM
+  bigip_provision:
+    name: gtm
+  tags:
+    - module-provisioning
+
+- name: Create datacenters
+  bigip_gtm_datacenter:
+    name: "{{ item }}"
+  loop:
+    - "{{ dc_name1 }}"
+    - "{{ dc_name2 }}"

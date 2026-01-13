@@ -1,0 +1,158 @@
+---
+
+- name: Ensure ASM is provisioned
+  bigip_provision:
+    module: asm
+  tags:
+    - module-provisioning
+
+- name: Create HTTP iApp template
+  bigip_iapp_template:
+    content: "{{ lookup('file', item) }}"
+  loop:
+    - f5.http.v1.2.0rc4.tmpl
+    - appsvcs_integration_v2.0.002.tmpl
+  register: result
+
+- name: Create HTTP iApp service from iApp template
+  bigip_iapp_service:
+    name: foo-service
+    template: f5.http.v1.2.0rc4
+    parameters: "{{ lookup('file', 'f5.http.v1.2.0rc4.parameters.json') }}"
+  tags: bigip_iapp_service_configure
+  register: result
+
+- name: Assert Create HTTP iApp service from iApp template
+  assert:
+    that:
+      - result is changed
+
+- name: Create HTTP iApp service from iApp template - Idempotent check
+  bigip_iapp_service:
+    name: foo-service
+    template: f5.http.v1.2.0rc4
+    parameters: "{{ lookup('file', 'f5.http.v1.2.0rc4.parameters.json') }}"
+  register: result
+
+- name: Assert Create HTTP iApp service from iApp template - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete HTTP iApp service
+  bigip_iapp_service:
+    name: foo-service
+    state: absent
+  tags: bigip_iapp_service_delete
+  register: result
+
+- name: Assert Delete HTTP iApp service
+  assert:
+    that:
+      - result is changed
+
+- name: Delete HTTP iApp service - Idempotent check
+  bigip_iapp_service:
+    name: foo-service
+    state: absent
+  register: result
+
+- name: Assert Delete HTTP iApp service - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Create AppSvcs iApp service from iApp template
+  bigip_iapp_service:
+    name: foo-app-service
+    template: appsvcs_integration_v2.0.002
+    parameters: "{{ lookup('file', 'f5.http.v1.2.0rc4_myhttps_w_asm_payload.json') }}"
+  tags: foo-app-service-configure
+  register: result
+
+- name: Assert Create AppSvcs iApp service from iApp template
+  assert:
+    that:
+      - result is changed
+
+- name: Create AppSvcs iApp service from iApp template - Idempotent check
+  bigip_iapp_service:
+    name: foo-app-service
+    template: appsvcs_integration_v2.0.002
+    parameters: "{{ lookup('file', 'f5.http.v1.2.0rc4_myhttps_w_asm_payload.json') }}"
+  register: result
+
+- name: Assert Create AppSvcs iApp service from iApp template - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete AppSvcs iApp service from iApp template
+  bigip_iapp_service:
+    name: foo-app-service
+    state: absent
+  tags: foo-app-service-delete
+  register: result
+
+- name: Assert Delete AppSvcs iApp service from iApp template
+  assert:
+    that:
+      - result is changed
+
+- name: Delete AppSvcs iApp service from iApp template - Idempotent check
+  bigip_iapp_service:
+    name: foo-app-service
+    state: absent
+  register: result
+
+- name: Assert Delete AppSvcs iApp service from iApp template - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Tidy up unit templates
+  bigip_iapp_template:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - f5.http.v1.2.0rc4.tmpl
+    - appsvcs_integration_v2.0.002.tmpl
+  register: result
+
+- name: De-provision ASM
+  bigip_provision:
+    module: asm
+    state: absent
+  tags:
+    - module-provisioning
+    - deprovision-module
+
+- import_tasks: issue-00089.yaml
+  tags: issue-00089
+
+- import_tasks: issue-00137.yaml
+  tags: issue-00137
+
+- import_tasks: issue-00138.yaml
+  tags: issue-00138
+
+- import_tasks: issue-00254.yaml
+  tags: issue-00254
+
+- import_tasks: issue-00263.yaml
+  tags: issue-00263
+
+- import_tasks: issue-00307.yaml
+  tags: issue-00307
+
+- import_tasks: issue-00354.yaml
+  tags: issue-00354
+
+- import_tasks: issue-00359.yaml
+  tags: issue-00359
+
+- import_tasks: issue-00496.yaml
+  tags: issue-00496
+
+- import_tasks: issue-00879.yaml
+  tags: issue-00879

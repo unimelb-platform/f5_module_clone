@@ -1,0 +1,81 @@
+---
+
+- name: Get facts
+  bigip_facts:
+    include:
+      - self_ip
+  register: f
+
+- name: Change the hostname
+  bigip_hostname:
+    hostname: "{{ inventory_hostname }}"
+  register: result
+
+- name: Configure device connectivity for standard HA pair
+  bigip_device_connectivity:
+    config_sync_ip: "{{ f['self_ip']['/Common/net1']['address'] }}"
+
+- name: Issue 00704 - Trust remote peer device
+  bigip_device_trust:
+    peer_server: "{{ hostvars[groups['f5-test'][1]].ansible_host }}"
+    peer_hostname: "{{ hostvars[groups['f5-test'][1]].inventory_hostname }}"
+    peer_user: admin
+    peer_password: admin
+  register: result
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Assert Trust remote peer device
+  assert:
+    that:
+      - result is changed
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Trust remote peer device - Idempotent check
+  bigip_device_trust:
+    peer_server: "{{ hostvars[groups['f5-test'][1]].ansible_host }}"
+    peer_hostname: "{{ hostvars[groups['f5-test'][1]].inventory_hostname }}"
+    peer_user: admin
+    peer_password: admin
+  register: result
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Assert Trust remote peer device - Idempotent check
+  assert:
+    that:
+      - result is not changed
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Remove remote peer device
+  bigip_device_trust:
+    peer_server: "{{ hostvars[item].ansible_host }}"
+    peer_hostname: "{{ hostvars[item].inventory_hostname }}"
+    peer_user: admin
+    peer_password: admin
+    state: absent
+  register: result
+  loop: "{{ groups['f5-test'] }}"
+  when: item != inventory_hostname
+
+- name: Issue 00704 - Assert Remove remote peer device
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00704 - Remove remote peer device - Idempotent check
+  bigip_device_trust:
+    peer_server: "{{ hostvars[item].ansible_host }}"
+    peer_hostname: "{{ hostvars[item].inventory_hostname }}"
+    peer_user: admin
+    peer_password: admin
+    state: absent
+  register: result
+  loop: "{{ groups['f5-test'] }}"
+  when: item != inventory_hostname
+
+- name: Issue 00704 - Assert Remove remote peer device - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- import_tasks: issue-00704.yaml
+  tags: issue-00704

@@ -1,0 +1,20 @@
+---
+- import_tasks: setup.yaml
+- import_tasks: typed-gtm-pools.yaml
+
+- import_tasks: teardown.yaml
+
+- import_tasks: issue-00125.yaml
+  tags: issue-00125
+
+- import_tasks: issue-00140.yaml
+  tags: issue-00140
+
+- import_tasks: issue-00142.yaml
+  tags: issue-00142
+
+- import_tasks: issue-00375.yaml
+  tags: issue-00375
+
+- import_tasks: issue-00690.yaml
+  tags: issue-00690

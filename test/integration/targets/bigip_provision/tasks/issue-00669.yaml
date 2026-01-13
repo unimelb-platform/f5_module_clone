@@ -1,0 +1,21 @@
+---
+
+- name: Set AFM Provision to Nominal
+  bigip_provision:
+    level: nominal
+    module: afm
+
+- name: Set LTM Provision to None
+  bigip_provision:
+    module: ltm
+    state: absent
+
+- name: De-provision AFM
+  bigip_provision:
+    module: afm
+    state: absent
+
+- name: Re-Provision LTM
+  bigip_provision:
+    module: ltm
+    level: nominal

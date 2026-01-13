@@ -1,0 +1,123 @@
+---
+
+- name: Issue 00229 - Create partition - Provider
+  bigip_partition:
+    name: Tenant1A
+    state: present
+    provider: "{{ provider }}"
+
+- name: Issue 00229 - Create VLAN - Provider
+  bigip_vlan:
+    name: External
+    partition: Tenant1A
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Create VLAN on Common - Provider
+  bigip_vlan:
+    name: InternalCommon
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Configure Self-IPs on the BIG-IP - Provider
+  bigip_selfip:
+    name: issue-229
+    address: 1.2.3.4
+    netmask: 255.255.255.0
+    vlan: External
+    partition: Tenant1A
+    state: present
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Assert Configure Self-IPs on the BIG-IP - Provider
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00229 - Configure Self-IPs on the BIG-IP - Provider - Idempotent check
+  bigip_selfip:
+    name: issue-229
+    address: 1.2.3.4
+    netmask: 255.255.255.0
+    vlan: External
+    partition: Tenant1A
+    state: present
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Assert Configure Self-IPs on the BIG-IP - Provider - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00229 - Remove Self-IP - Provider
+  bigip_selfip:
+    name: issue-229
+    partition: Tenant1A
+    state: absent
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Configure Self-IPs with specific partitions - Provider
+  bigip_selfip:
+    name: issue-229
+    address: 1.2.3.4
+    netmask: 255.255.255.0
+    vlan: /Common/InternalCommon
+    partition: Tenant1A
+    traffic_group: /Common/traffic-group-local-only
+    state: present
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Assert Configure Self-IPs with specific partitions - Provider
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00229 - Configure Self-IPs with specific partitions - Provider - Idempotent check
+  bigip_selfip:
+    name: issue-229
+    address: 1.2.3.4
+    netmask: 255.255.255.0
+    vlan: /Common/InternalCommon
+    partition: Tenant1A
+    traffic_group: /Common/traffic-group-local-only
+    state: present
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Assert Configure Self-IPs with specific partitions - Provider - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00229 - Remove Self-IP - Provider
+  bigip_selfip:
+    name: issue-229
+    partition: Tenant1A
+    state: absent
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Remove VLAN - Provider
+  bigip_vlan:
+    name: External
+    partition: Tenant1A
+    state: absent
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Remove Internal VLAN - Provider
+  bigip_vlan:
+    name: InternalCommon
+    state: absent
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00229 - Remove Partition - Provider
+  bigip_partition:
+    name: Tenant1A
+    state: absent
+    provider: "{{ provider }}"

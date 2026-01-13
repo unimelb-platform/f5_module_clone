@@ -1,0 +1,28 @@
+---
+
+- import_tasks: node-by-address.yaml
+- import_tasks: node-by-fqdn.yaml
+- import_tasks: node-monitors.yaml
+- import_tasks: statuses.yaml
+  tags: status
+
+- import_tasks: issue-00732.yaml
+  tags: issue-00732
+
+- import_tasks: issue-00740.yaml
+  tags: issue-00740
+
+- import_tasks: issue-00742.yaml
+  tags: issue-00742
+
+- import_tasks: issue-00804.yaml
+  tags: issue-00804
+
+- import_tasks: issue-00810.yaml
+  tags: issue-00810
+
+- import_tasks: issue-01381.yaml
+  tags: issue-01381
+
+- import_tasks: infraano-00712.yaml
+  tags: infraano-00712

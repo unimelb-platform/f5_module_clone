@@ -1,0 +1,18 @@
+ansible
+invoke
+cffi
+packaging
+
+# Test running
+pycodestyle
+pylint
+flake8
+nose
+mock
+virtualenv
+semver
+antsibull-changelog
+cryptography
+objectpath
+ordereddict
+simplejson

@@ -1,0 +1,56 @@
+---
+
+- name: Issue 00315 - Include issue variables - Environment
+  include_vars:
+    file: issue-00315.yaml
+
+- name: Issue 00315 - Ensure internal VLAN exists - Environment
+  bigip_vlan:
+    name: internal
+
+- name: Issue 00315 - Create self-IPs - Environment
+  bigip_selfip:
+    name: "{{ item.name }}"
+    address: "{{ item.address|ipaddr('address') }}"
+    netmask: "{{ item.address|ipaddr('netmask') }}"
+    vlan: "{{ item.vlan }}"
+    route_domain: "{{ item.route_domain|default(omit) }}"
+    allow_service: default
+    state: present
+  delegate_to: localhost
+  loop: "{{ issue_315 }}"
+  register: result
+
+- name: Issue 00315 - Assert Create self-IPs - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00315 - Create self-IPs - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ item.name }}"
+    address: "{{ item.address|ipaddr('address') }}"
+    netmask: "{{ item.address|ipaddr('netmask') }}"
+    vlan: "{{ item.vlan }}"
+    route_domain: "{{ item.route_domain|default(omit) }}"
+    allow_service: default
+    state: present
+  delegate_to: localhost
+  loop: "{{ issue_315 }}"
+  register: result
+
+- name: Issue 00315 - Assert Create self-IPs - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00315 - Remove self-IPs - Environment
+  bigip_selfip:
+    name: "{{ item.name }}"
+    state: absent
+  loop: "{{ issue_315 }}"
+
+- name: Issue 00315 - Remove VLANs - Environment
+  bigip_vlan:
+    name: internal
+    state: absent

@@ -1,0 +1,66 @@
+---
+
+# We use clouds.yaml for both the CLI and Ansible configurations
+#
+# @see: https://docs.openstack.org/python-openstackclient/latest/configuration/index.html
+#
+
+version: '3.3'
+
+# Networks need to be overridden from their defaults to avoid address space
+# conflicts on site.
+networks:
+  default:
+    ipam:
+      driver: default
+      config:
+        - subnet: 2.2.2.0/24
+services:
+  py2.7:
+    image: f5ansible/py2.7:latest
+    command: /bin/bash
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+  py3.6:
+    image: f5ansible/py3.6:latest
+    command: /bin/bash
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here
+  py3.7:
+    image: f5ansible/py3.7:latest
+    command: /bin/bash
+    extra_hosts:
+      - "localhost:1.2.3.4"
+    volumes:
+      - type: bind
+        source: ../
+        target: /here
+      - type: bind
+        source: ../tmp/ansible.junit/
+        target: /tmp/ansible.junit
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - JUNIT_OUTPUT_DIR=/tmp/ansible.junit
+      - PYTHONPATH=/here

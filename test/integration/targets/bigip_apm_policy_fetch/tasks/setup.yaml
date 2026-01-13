@@ -1,0 +1,33 @@
+---
+- name: Collect BIG-IP facts
+  bigip_device_info:
+    include: system-info
+  register: f
+
+- name: Provision APM
+  bigip_provision:
+    name: apm
+  tags:
+    - module-provisioning
+
+- name: Create APM access profile v14
+  bigip_apm_policy_import:
+    name: "{{ policy }}"
+    source: "{{ role_path }}/fixtures/v14_1_profile.tar.gz"
+  when:
+    - f.system_info.product_version >= "14.1.0"
+    - f.system_info.product_version < "15.0.0"
+
+- name: Create APM access profile v15
+  bigip_apm_policy_import:
+    name: "{{ policy }}"
+    source: "{{ role_path }}/fixtures/v15_1_profile.tar.gz"
+  when:
+    - f.system_info.product_version >= "15.0.0"
+    - f.system_info.product_version < "16.0.0"
+
+- name: Create APM access profile v16
+  bigip_apm_policy_import:
+    name: "{{ policy }}"
+    source: "{{ role_path }}/fixtures/v16_1_profile.tar.gz"
+  when: f.system_info.product_version >= "16.0.0"

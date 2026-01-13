@@ -1,0 +1,85 @@
+---
+
+- name: Issue 00536 - Create VLAN - Provider
+  bigip_vlan:
+    name: prod_vlan
+    provider: "{{ provider }}"
+
+- name: Issue 00536 - Create non-floating self IP - Provider
+  bigip_selfip:
+    address: 1.1.1.1
+    netmask: 255.255.255.0
+    name: v1244_non_floating
+    vlan: prod_vlan
+    allow_service: default
+    traffic_group: traffic-group-local-only
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00536 - Assert Create non-floating self IP - Provider
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00536 - Create non-floating self IP - Provider - Idempotent check
+  bigip_selfip:
+    address: 1.1.1.1
+    netmask: 255.255.255.0
+    name: v1244_non_floating
+    vlan: prod_vlan
+    allow_service: default
+    traffic_group: traffic-group-local-only
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00536 - Assert Create non-floating self IP - Provider - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00536 - Create floating self IP - Provider
+  bigip_selfip:
+    address: 1.1.1.100
+    netmask: 255.255.255.0
+    name: v1244_floating
+    vlan: prod_vlan
+    allow_service: default
+    traffic_group: traffic-group-1
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00536 - Assert Create floating self IP - Provider
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00536 - Create floating self IP - Provider - Idempotent check
+  bigip_selfip:
+    address: 1.1.1.100
+    netmask: 255.255.255.0
+    name: v1244_floating
+    vlan: prod_vlan
+    allow_service: default
+    traffic_group: traffic-group-1
+    provider: "{{ provider }}"
+  register: result
+
+- name: Issue 00536 - Assert Create floating self IP - Provider - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00536 - Remove self IPs - floating must be removed first to prevent floating orphan - Provider
+  bigip_selfip:
+    name: "{{ item }}"
+    state: absent
+    provider: "{{ provider }}"
+  loop:
+    - v1244_floating
+    - v1244_non_floating
+
+- name: Issue 00536 - Remove VLAN - Provider
+  bigip_vlan:
+    name: prod_vlan
+    state: absent
+    provider: "{{ provider }}"

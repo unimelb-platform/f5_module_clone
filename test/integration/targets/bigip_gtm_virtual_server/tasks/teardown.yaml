@@ -1,0 +1,19 @@
+---
+
+- name: Remove GTM server
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    state: absent
+
+- name: Remove GTM links
+  bigip_command:
+    commands:
+      - "tmsh delete gtm link {{ link_name_1 }}"
+      - "tmsh delete gtm link {{ link_name_2 }}"
+
+- name: Remove datacenters
+  bigip_gtm_datacenter:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ dc_name1 }}"

@@ -1,0 +1,126 @@
+---
+
+- import_tasks: setup.yaml
+
+- import_tasks: type-standard.yaml
+- import_tasks: type-dhcp.yaml
+- import_tasks: type-forwarding-ip.yaml
+- import_tasks: type-forwarding-l2.yaml
+- import_tasks: type-internal.yaml
+- import_tasks: type-message-routing.yaml
+- import_tasks: type-performance-http.yaml
+- import_tasks: type-performance-l4.yaml
+  tags:
+    - fastl4
+- import_tasks: type-reject.yaml
+- import_tasks: type-stateless.yaml
+
+- import_tasks: teardown.yaml
+
+# Tests for different issues filed on Github
+- import_tasks: issue-00032.yaml
+  tags: issue-00032
+
+- import_tasks: issue-00038.yaml
+  tags: issue-00038
+
+- import_tasks: issue-00044.yaml
+  tags: issue-00044
+
+- import_tasks: issue-00053.yaml
+  tags: issue-00053
+
+- import_tasks: issue-00057.yaml
+  tags: issue-00057
+
+- import_tasks: issue-00059.yaml
+  tags: issue-00059
+
+- import_tasks: issue-00093.yaml
+  tags: issue-00093
+
+- import_tasks: issue-00101.yaml
+  tags: issue-00101
+
+- import_tasks: issue-00205.yaml
+  tags: issue-00205
+
+- import_tasks: issue-00385.yaml
+  tags: issue-00385
+
+- import_tasks: issue-00402.yaml
+  tags: issue-00402
+
+- import_tasks: issue-00403.yaml
+  tags: issue-00403
+
+- import_tasks: issue-00408.yaml
+  tags: issue-00408
+
+- import_tasks: issue-00419.yaml
+  tags: issue-00419
+
+- import_tasks: issue-00454.yaml
+  tags: issue-00454
+
+- import_tasks: issue-00456.yaml
+  tags: issue-00456
+
+- import_tasks: issue-00460.yaml
+  tags: issue-00460
+
+- import_tasks: issue-00483.yaml
+  tags: issue-00483
+
+- import_tasks: issue-00491.yaml
+  tags: issue-00491
+
+- import_tasks: issue-00511.yaml
+  tags: issue-00511
+
+- import_tasks: issue-00515.yaml
+  tags: issue-00515
+
+- import_tasks: issue-00518.yaml
+  tags: issue-00518
+
+- import_tasks: issue-00519.yaml
+  tags: issue-00519
+
+- import_tasks: issue-00520.yaml
+  tags: issue-00520
+
+- import_tasks: issue-00521.yaml
+  tags: issue-00521
+
+- import_tasks: issue-00523.yaml
+  tags: issue-00523
+
+- import_tasks: issue-00554.yaml
+  tags: issue-00554
+
+- import_tasks: issue-00569.yaml
+  tags: issue-00569
+
+- import_tasks: issue-00579.yaml
+  tags: issue-00579
+
+- import_tasks: issue-00675.yaml
+  tags: issue-00675
+
+- import_tasks: issue-00805.yaml
+  tags: issue-00805
+
+- import_tasks: issue-02103.yaml
+  tags: issue-02103
+
+- import_tasks: issue-02104.yaml
+  tags: issue-02104
+
+# Tests for different pull requests filed on Github
+- import_tasks: pr-03158.yaml
+  tags: pr-03158
+
+# tests for fixes logged in jira
+- import_tasks: infraano-00653.yaml
+  tags: infraano-00653

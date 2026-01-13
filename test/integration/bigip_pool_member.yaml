@@ -1,0 +1,79 @@
+---
+
+# Test the bigip_pool_member module
+#
+# Running this playbook assumes that you have a BIG-IP installation at the
+# ready to receive the commands issued in this Playbook.
+#
+# This module will run tests against a BIG-IP host to verify that the
+# bigip_pool_member module behaves as expected.
+#
+# Usage:
+#
+#    ansible-playbook -i notahost, playbooks/bigip_pool_member.yaml
+#
+# Examples:
+#
+#    Run all tests on the bigip_pool_member module
+#
+#    ansible-playbook -i notahost, playbooks/bigip_pool_member.yaml
+#
+
+- name: Metadata of bigip_pool_member
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    __metadata__:
+      upstream: yes
+      version: 1.2
+      tested_versions:
+        - NA
+      tested_platforms:
+        - NA
+
+- name: Test the bigip_pool_member module - Environment
+  hosts: "f5test"
+  connection: local
+  any_errors_fatal: true
+
+  environment:
+    F5_SERVER: "{{ ansible_host }}"
+    F5_USER: "{{ bigip_username }}"
+    F5_PASSWORD: "{{ bigip_password }}"
+    F5_SERVER_PORT: "{{ bigip_port }}"
+    F5_VALIDATE_CERTS: "{{ validate_certs }}"
+    F5_TEEM: "{{ no_f5_teem }}"
+
+  tasks:
+    - name: Include role - Environment
+      import_role:
+        name: bigip_pool_member
+        tasks_from: environment.yaml
+      tags:
+        - environment
+
+- name: Test the bigip_pool_member module - Provider
+  hosts: "f5test"
+  connection: local
+  any_errors_fatal: true
+
+  vars:
+    limit_to: '*'
+    provider:
+      transport: rest
+      user: "{{ bigip_username }}"
+      server: "{{ ansible_host }}"
+      server_port: "{{ bigip_port }}"
+      password: "{{ bigip_password }}"
+      validate_certs: "{{ validate_certs }}"
+      no_f5_teem: "{{ no_f5_teem }}"
+
+  tasks:
+    - name: Include role - Environment
+      import_role:
+        name: bigip_pool_member
+        tasks_from: provider.yaml
+      tags:
+        - provider

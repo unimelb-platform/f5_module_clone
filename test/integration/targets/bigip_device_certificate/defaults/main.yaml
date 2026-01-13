@@ -1,0 +1,6 @@
+cli_provider:
+    transport: cli
+    user: "{{ bigip_ssh_username | default('root') }}"
+    server: "{{ ansible_host }}"
+    server_port: "{{ bigip_ssh_port | default(22) }}"
+    password: "{{ bigip_ssh_password | default('root') }}"

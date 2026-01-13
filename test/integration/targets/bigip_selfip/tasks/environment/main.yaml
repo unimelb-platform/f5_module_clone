@@ -1,0 +1,340 @@
+---
+
+- name: Include task to setup the remote device - Environment
+  import_tasks: setup-main.yaml
+
+- name: Create Self IP - Environment
+  bigip_selfip:
+    address: "{{ selfip }}"
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask }}"
+    vlan: "{{ selfip_vlan }}"
+  register: result
+
+- name: Assert Create Self IP - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Create Self IP - Environment - Idempotent check
+  bigip_selfip:
+    address: "{{ selfip }}"
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask }}"
+    vlan: "{{ selfip_vlan }}"
+  register: result
+
+- name: Assert Create Self IP - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set Self IP VLAN - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    vlan: "{{ selfip_vlan2 }}"
+  register: result
+
+- name: Assert Set Self IP VLAN - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set Self IP VLAN - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    vlan: "{{ selfip_vlan2 }}"
+  register: result
+
+- name: Assert Set Self IP VLAN - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set Self IP netmask - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask2 }}"
+  register: result
+
+- name: Assert Set Self IP netmask - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set Self IP netmask - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask2 }}"
+  register: result
+
+- name: Assert Set Self IP netmask - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set single protocol allow service - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service: "{{ allowed_services_single }}"
+  register: result
+
+- name: Assert Set single protocol allow service - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set single protocol allow service - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service: "{{ allowed_services_single }}"
+  register: result
+
+- name: Assert Set single protocol allow service - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set multiple protocol allow all service - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service: "{{ allowed_services_multi }}"
+  register: result
+
+- name: Assert Set multiple protocol allow all service - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set multiple protocol allow all service - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service: "{{ allowed_services_multi }}"
+  register: result
+
+- name: Assert Set multiple protocol allow all service - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set keyword "all" allow service - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service:
+      - all
+  register: result
+
+- name: Assert Set keyword "all" allow service - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set keyword "all" allow service - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service:
+      - all
+  register: result
+
+- name: Assert Set keyword "all" allow service - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set keyword "default" allow service - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service:
+      - default
+  register: result
+
+- name: Assert Set keyword "default" allow service - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set keyword "default" allow service - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service:
+      - default
+  register: result
+
+- name: Assert Set keyword "default" allow service - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Set keyword "none" allow service - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service:
+      - none
+  register: result
+
+- name: Assert Set keyword "none" allow service - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set keyword "none" allow service - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    allow_service:
+      - none
+  register: result
+
+- name: Assert Set keyword "none" allow service - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete Self IP - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete Self IP - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Delete Self IP - Environment - Idempotent check
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete Self IP - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Create Self IP, specify a traffic group - Environment
+  bigip_selfip:
+    address: "{{ selfip }}"
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask }}"
+    traffic_group: "{{ default_traffic_group }}"
+    vlan: "{{ selfip_vlan }}"
+  register: result
+
+- name: Assert Create Self IP, specify a traffic group - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Create Self IP, specify a traffic group - Environment - Idempotent check
+  bigip_selfip:
+    address: "{{ selfip }}"
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask }}"
+    traffic_group: "{{ default_traffic_group }}"
+    vlan: "{{ selfip_vlan }}"
+  register: result
+
+- name: Assert Create Self IP, specify a traffic group - Environment - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Delete Self IP that specified traffic group - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    state: absent
+  register: result
+
+- name: Assert Delete Self IP that specified traffic group - Environment
+  assert:
+    that:
+      - result is changed
+
+- name: Set 'all' access when creating Self IP - Environment
+  bigip_selfip:
+    address: "{{ selfip }}"
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask }}"
+    allow_service:
+      - all
+    vlan: "{{ selfip_vlan }}"
+  register: result
+
+- name: Set 'all' access when creating Self IP - Environment
+  assert:
+    that:
+      - result is changed
+      - result is success
+
+- name: Remove 'all' access Self IP - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    state: absent
+
+- name: Set 'default' access when creating Self IP - Environment
+  bigip_selfip:
+    address: "{{ selfip }}"
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask }}"
+    allow_service:
+      - default
+    vlan: "{{ selfip_vlan }}"
+  register: result
+
+- name: Set 'default' access when creating Self IP - Environment
+  assert:
+    that:
+      - result is changed
+      - result is success
+
+- name: Remove 'default' access Self IP - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    state: absent
+
+- name: Set 'none' access when creating Self IP - Environment
+  bigip_selfip:
+    address: "{{ selfip }}"
+    name: "{{ selfip_name }}"
+    netmask: "{{ selfip_netmask }}"
+    allow_service:
+      - none
+    vlan: "{{ selfip_vlan }}"
+  register: result
+
+- name: Set 'none' access when creating Self IP - Environment
+  assert:
+    that:
+      - result is changed
+      - result is success
+
+- name: Remove 'none' access Self IP - Environment
+  bigip_selfip:
+    name: "{{ selfip_name }}"
+    state: absent
+
+- import_tasks: environment/route-domain.yaml
+
+- import_tasks: environment/issue-00315.yaml
+  tags: issue-00315
+
+- import_tasks: environment/issue-00229.yaml
+  tags: issue-00229
+
+- import_tasks: environment/issue-00365.yaml
+  tags: issue-00365
+
+- import_tasks: environment/issue-00401.yaml
+  tags: issue-00401
+
+- import_tasks: environment/issue-00420.yaml
+  tags: issue-00420
+
+- import_tasks: environment/issue-00536.yaml
+  tags: issue-00536
+
+- import_tasks: environment/issue-00753.yaml
+  tags: issue-00753
+
+- import_tasks: environment/issue-01038.yaml
+  tags: issue-01038

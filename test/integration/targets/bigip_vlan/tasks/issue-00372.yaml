@@ -1,0 +1,83 @@
+---
+
+- name: Issue 00372 - Collect BIG-IP facts
+  bigip_device_info:
+    include: system-info
+  register: f
+
+- name: Issue 00372 - Create vlan
+  bigip_vlan:
+    name: issue-00433
+    dag_tunnel: inner
+  register: result
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Assert Create vlan
+  assert:
+    that:
+      - result is changed
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Create vlan - Idempotent check
+  bigip_vlan:
+    name: issue-00433
+    dag_tunnel: inner
+  register: result
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Assert Create vlan - Idempotent check
+  assert:
+    that:
+      - result is not changed
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Change DAG tunnel
+  bigip_vlan:
+    name: issue-00433
+    dag_tunnel: outer
+  register: result
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Assert Create vlan
+  assert:
+    that:
+      - result is changed
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Create vlan - Idempotent check
+  bigip_vlan:
+    name: issue-00433
+    dag_tunnel: outer
+  register: result
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Assert Create vlan - Idempotent check
+  assert:
+    that:
+      - result is not changed
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags
+
+- name: Issue 00372 - Remove vlan - Idempotent check
+  bigip_vlan:
+    name: issue-00433
+    state: absent
+  register: result
+  when:
+    - f.system_info.marketing_name != "BIG-IP Virtual Edition"
+    - f.system_info.platform in dags

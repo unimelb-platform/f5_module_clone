@@ -1,0 +1,32 @@
+---
+
+- name: Collect BIG-IP facts
+  bigip_device_info:
+    include: system-info
+  register: f
+
+- name: Provision GTM
+  bigip_provision:
+    name: gtm
+  tags:
+    - module-provisioning
+
+- name: Create datacenter
+  bigip_gtm_datacenter:
+    name: "{{ dc_name1 }}"
+
+- name: Create GTM server
+  bigip_gtm_server:
+    name: "{{ server_name }}"
+    devices:
+      - name: foo
+        address: 6.5.7.4
+        translation: 2.2.2.2
+    datacenter: "{{ dc_name1 }}"
+    state: present
+
+- name: Create GTM links
+  bigip_command:
+    commands:
+      - "tmsh create gtm link {{ link_name_1 }} router-addresses replace-all-with { {{ link_address_1 }} } datacenter {{ dc_name1 }}"
+      - "tmsh create gtm link {{ link_name_2 }} router-addresses replace-all-with { {{ link_address_2 }} } datacenter {{ dc_name1 }}"

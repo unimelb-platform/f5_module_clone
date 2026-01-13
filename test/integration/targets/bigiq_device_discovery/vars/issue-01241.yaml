@@ -1,0 +1,13 @@
+---
+
+conflict2: keep_version
+modules1:
+    - ltm
+    - dns
+
+modules2:
+    - ltm
+
+modules3:
+    - afm
+    - security_shared

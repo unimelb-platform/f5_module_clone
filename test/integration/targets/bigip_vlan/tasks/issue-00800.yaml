@@ -1,0 +1,299 @@
+---
+
+- name: Issue 00800 - Create vlan
+  bigip_vlan:
+    name: issue-00800
+    mtu: 1600
+
+- name: Issue 00800 - Change source checking - yes
+  bigip_vlan:
+    name: issue-00800
+    source_check: yes
+  register: result
+
+- name: Issue 00800 - Assert Change source checking - yes
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change source checking - yes - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    source_check: yes
+  register: result
+
+- name: Issue 00800 - Assert Change source checking - yes - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change source checking - no
+  bigip_vlan:
+    name: issue-00800
+    source_check: no
+  register: result
+
+- name: Issue 00800 - Assert Change source checking - no
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change source checking - no - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    source_check: no
+  register: result
+
+- name: Issue 00800 - Assert Change source checking - no - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change fail safe - yes
+  bigip_vlan:
+    name: issue-00800
+    fail_safe: yes
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe - yes
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change fail safe - yes - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    fail_safe: yes
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe - yes - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change fail safe - no
+  bigip_vlan:
+    name: issue-00800
+    fail_safe: no
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe - no
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change fail safe - no - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    fail_safe: no
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe - no - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change fail safe timeout
+  bigip_vlan:
+    name: issue-00800
+    fail_safe_timeout: 100
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe timeout
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change fail safe timeout - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    fail_safe_timeout: 100
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe timeout - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change fail safe action - restart-all
+  bigip_vlan:
+    name: issue-00800
+    fail_safe_action: restart-all
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe action - restart-all
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change fail safe action - restart-all - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    fail_safe_action: restart-all
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe action - restart-all - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change fail safe action - reboot
+  bigip_vlan:
+    name: issue-00800
+    fail_safe_action: reboot
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe action - reboot
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change fail safe action - reboot - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    fail_safe_action: reboot
+  register: result
+
+- name: Issue 00800 - Assert Change fail safe action - reboot - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change sflow poll interval
+  bigip_vlan:
+    name: issue-00800
+    sflow_poll_interval: 10
+  register: result
+
+- name: Issue 00800 - Assert Change sflow poll interval
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change sflow poll interval - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    sflow_poll_interval: 10
+  register: result
+
+- name: Issue 00800 - Assert Change sflow poll interval - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change sflow sampling rate
+  bigip_vlan:
+    name: issue-00800
+    sflow_sampling_rate: 10
+  register: result
+
+- name: Issue 00800 - Assert Change sflow sampling rate
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change sflow sampling rate - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    sflow_sampling_rate: 10
+  register: result
+
+- name: Issue 00800 - Assert Change sflow sampling rate - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Change both sflow settings
+  bigip_vlan:
+    name: issue-00800
+    sflow_sampling_rate: 20
+    sflow_poll_interval: 30
+  register: result
+
+- name: Issue 00800 - Assert Change both sflow settings
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00800 - Change both sflow settings - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    sflow_sampling_rate: 20
+    sflow_poll_interval: 30
+  register: result
+
+- name: Issue 00800 - Assert Change both sflow settings - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00800 - Collect BIG-IP facts
+  bigip_device_info:
+    include:
+      - system-info
+  register: f
+
+- name: Issue 00800 - Change interfaces
+  bigip_vlan:
+    name: issue-00800
+    interfaces:
+      - interface: 1.1
+        tagging: tagged
+      - interface: 1.2
+        tagging: untagged
+  register: result
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Assert Change interfaces
+  assert:
+    that:
+      - result is changed
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Change interfaces - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    interfaces:
+      - interface: 1.1
+        tagging: tagged
+      - interface: 1.2
+        tagging: untagged
+  register: result
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Assert Change interfaces - Idempotent check
+  assert:
+    that:
+      - result is not changed
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Change interfaces - none
+  bigip_vlan:
+    name: issue-00800
+    interfaces: none
+  register: result
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Assert Change interfaces - none
+  assert:
+    that:
+      - result is changed
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Change interfaces - none - Idempotent check
+  bigip_vlan:
+    name: issue-00800
+    interfaces: none
+  register: result
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Assert Change interfaces - none - Idempotent check
+  assert:
+    that:
+      - result is not changed
+  when: f.system_info.marketing_name != "BIG-IP Virtual Edition"
+
+- name: Issue 00800 - Delete vlan
+  bigip_vlan:
+    name: issue-00800
+    state: absent

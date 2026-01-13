@@ -1,0 +1,11 @@
+---
+
+banner_text: This is a corporate device. Do not touch.
+console_timeout: 1200
+gui_audit: yes
+gui_setup: yes
+lcd_display: no
+mgmt_dhcp: no
+net_reboot: yes
+quiet_boot: no
+security_banner: no

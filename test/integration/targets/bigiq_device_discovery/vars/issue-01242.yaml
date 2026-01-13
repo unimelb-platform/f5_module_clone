@@ -1,0 +1,13 @@
+---
+
+conflict: use_bigip
+conflict2: keep_version
+
+modules1:
+    - ltm
+    - apm
+
+modules2:
+    - ltm
+    - dns
+    - apm

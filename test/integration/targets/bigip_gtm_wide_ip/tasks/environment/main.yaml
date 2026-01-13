@@ -1,0 +1,36 @@
+---
+
+- name: Provision GTM
+  bigip_provision:
+    module: gtm
+  tags:
+    - module-provisioning
+
+- import_tasks: typed-gtm-wideip.yaml
+
+- import_tasks: issue-00124.yaml
+  tags: issue-00124
+
+- import_tasks: issue-00607.yaml
+  tags: issue-00607
+
+- import_tasks: issue-01920.yaml
+  tags: issue-01920
+
+- import_tasks: issue-00665.yaml
+  tags: issue-00665
+
+- import_tasks: issue-00821.yaml
+  tags: issue-00821
+
+- import_tasks: issue-01597.yaml
+  tags: issue-01597
+
+- import_tasks: issue-persistence.yaml
+  tags: issue-persistence
+
+- import_tasks: issue-disabled.yaml
+  tags: issue-disabled
+
+- import_tasks: issue-02031.yaml
+  tags: issue-02031

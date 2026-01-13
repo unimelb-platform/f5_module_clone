@@ -1,0 +1,35 @@
+---
+
+- import_tasks: setup.yaml
+- import_tasks: internal.yaml
+  tags: internal
+- import_tasks: external.yaml
+  tags: external
+- import_tasks: teardown.yaml
+
+- import_tasks: issue-00652.yaml
+  tags: issue-00652
+
+- import_tasks: issue-00815.yaml
+  tags: issue-00815
+
+- import_tasks: issue-01083.yaml
+  tags: issue-01083
+
+- import_tasks: issue-01210.yaml
+  tags: issue-01210
+
+- import_tasks: issue-01346.yaml
+  tags: issue-01346
+
+- import_tasks: issue-01607.yaml
+  tags: issue-01607
+
+- import_tasks: issue-01587.yaml
+  tags: issue-01587
+
+- import_tasks: issue-02018.yaml
+  tags: issue-02018
+
+- import_tasks: issue-02246.yaml
+  tags: issue-02246

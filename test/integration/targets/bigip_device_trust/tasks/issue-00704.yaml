@@ -1,0 +1,70 @@
+---
+
+- name: Issue 00704 - Get facts
+  bigip_facts:
+    include:
+      - self_ip
+  register: f
+
+- name: Issue 00704 - Change the hostname
+  bigip_hostname:
+    hostname: "{{ inventory_hostname }}"
+  register: result
+
+- name: Issue 00704 - Configure device connectivity for standard HA pair
+  bigip_device_connectivity:
+    config_sync_ip: "{{ f['self_ip']['/Common/net1']['address'] }}"
+
+- name: Issue 00704 - Trust remote peer device
+  bigip_device_trust:
+    peer_server: "{{ hostvars[groups['f5-test'][1]].ansible_host }}"
+    peer_hostname: "{{ hostvars[groups['f5-test'][1]].inventory_hostname }}"
+  register: result
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Assert Trust remote peer device
+  assert:
+    that:
+      - result is changed
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Trust remote peer device - Idempotent check
+  bigip_device_trust:
+    peer_server: "{{ hostvars[groups['f5-test'][1]].ansible_host }}"
+    peer_hostname: "{{ hostvars[groups['f5-test'][1]].inventory_hostname }}"
+  register: result
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Assert Trust remote peer device - Idempotent check
+  assert:
+    that:
+      - result is not changed
+  when: play_hosts[0] == inventory_hostname
+
+- name: Issue 00704 - Remove remote peer device
+  bigip_device_trust:
+    peer_server: "{{ hostvars[item].ansible_host }}"
+    peer_hostname: "{{ hostvars[item].inventory_hostname }}"
+    state: absent
+  register: result
+  loop: "{{ groups['f5-test'] }}"
+  when: item != inventory_hostname
+
+- name: Issue 00704 - Assert Remove remote peer device
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00704 - Remove remote peer device - Idempotent check
+  bigip_device_trust:
+    peer_server: "{{ hostvars[item].ansible_host }}"
+    peer_hostname: "{{ hostvars[item].inventory_hostname }}"
+    state: absent
+  register: result
+  loop: "{{ groups['f5-test'] }}"
+  when: item != inventory_hostname
+
+- name: Issue 00704 - Assert Remove remote peer device - Idempotent check
+  assert:
+    that:
+      - result is not changed

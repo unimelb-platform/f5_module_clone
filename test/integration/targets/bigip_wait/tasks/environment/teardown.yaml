@@ -1,0 +1,7 @@
+---
+
+- name: Remove pool - environment
+  bigip_pool:
+    name: foo-pool
+    state: absent
+  register: result

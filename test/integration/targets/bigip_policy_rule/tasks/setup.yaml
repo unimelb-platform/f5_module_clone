@@ -1,0 +1,50 @@
+---
+
+- name: Provision ASM to test attaching ASM policies to LTM policy
+  bigip_provision:
+    module: asm
+  tags:
+    - module-provisioning
+
+- name: Collect BIG-IP facts - policy
+  bigip_device_info:
+    include: system-info
+  register: f
+
+- name: Create a pool for testing forwarding to pools
+  bigip_pool:
+    name: "{{ item }}"
+    lb_method: round-robin
+  loop:
+    - foo-pool
+    - foo-pool2
+
+- name: Create ASM policy, compact XML file - current
+  bigip_asm_policy_import:
+    name: foo-policy
+    source: "{{ role_path }}/files/v2_policy_default_compact_format_enabled.xml"
+  when: f.system_info.product_version >= "13.0.0"
+
+- name: Create ASM policy, compact XML file - legacy
+  bigip_asm_policy_import:
+    name: foo-policy
+    source: "{{ role_path }}/files/v1_policy_default_compact_format_enabled.xml"
+  when: f.system_info.product_version < "13.0.0"
+
+- name: Activate imported ASM policy
+  bigip_asm_policy_manage:
+    name: foo-policy
+    active: yes
+    state: present
+
+- name: Create published policy
+  bigip_policy:
+    name: "{{ policy_name1 }}"
+    state: present
+  register: result
+
+- name: Create draft policy
+  bigip_policy:
+    name: "{{ policy_name2 }}"
+    state: draft
+  register: result

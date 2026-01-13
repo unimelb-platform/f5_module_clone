@@ -1,0 +1,29 @@
+---
+
+- name: Issue 00276 - Turn on tmsh shell for admin user - Issue 276
+  bigip_user:
+    username_credential: admin
+    shell: bash
+  register: result
+
+- name: Issue 00276 - Assert Turn on tmsh shell for admin user - Issue 276
+  assert:
+    that:
+      - result is changed
+
+- name: Issue 00276 - Turn on tmsh shell for admin user - Issue 276 - Idempotent check
+  bigip_user:
+    username_credential: admin
+    shell: bash
+  register: result
+
+- name: Issue 00276 - Assert Turn on tmsh shell for admin user - Issue 276 - Idempotent check
+  assert:
+    that:
+      - result is not changed
+
+- name: Issue 00276 - Turn off tmsh shell for admin user
+  bigip_user:
+    username_credential: admin
+    shell: tmsh
+  register: result

@@ -1,0 +1,12 @@
+---
+
+- import_tasks: setup.yaml
+
+- import_tasks: v1-tasks.yaml
+- import_tasks: v2-tasks.yaml
+- import_tasks: v3-tasks.yaml
+
+- import_tasks: teardown.yaml
+
+- import_tasks: issue-00659.yaml
+  tags: issue-00659
